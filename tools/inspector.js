@@ -19,28 +19,28 @@ function call(method, params) {
 	});
 }
 function connect() {
-ws = new WebSocket("ws://localhost:" + PORT + "/devtools/page/" + PAGE);
-ws.onmessage = function (m) {
-	var msg = JSON.parse(m.data);
-	if (msg.method === "Target.targetCreated") {
-		targetId = msg.params.targetInfo.targetId;
-		targetWaiters.forEach(function (f) { f(); });
-		return;
-	}
-	if (msg.method === "Target.dispatchMessageFromTarget") msg = JSON.parse(msg.params.message);
-	else if (msg.id) return; // outer ack/error
-	if (msg.id && pending[msg.id]) {
-		var p = pending[msg.id]; delete pending[msg.id];
-		if (msg.error) p.reject(new Error(JSON.stringify(msg.error))); else p.resolve(msg.result);
-	} else if (msg.method === "Console.messageAdded" && cmd === "console") {
-		var c = msg.params.message;
-		console.log(c.level, c.text);
-	}
-};
-ws.onerror = function () { console.error("cannot connect: is ios_webkit_debug_proxy running, and is the Safari inspector window closed?"); process.exit(1); };
-ws.onopen = function () {
-	new Promise(function (res) { if (targetId) res(); else targetWaiters.push(res); }).then(run).then(function () { process.exit(0); }, function (e) { console.error("ERROR:", e.message); process.exit(1); });
-};
+	ws = new WebSocket("ws://localhost:" + PORT + "/devtools/page/" + PAGE);
+	ws.onmessage = function (m) {
+		var msg = JSON.parse(m.data);
+		if (msg.method === "Target.targetCreated") {
+			targetId = msg.params.targetInfo.targetId;
+			targetWaiters.forEach(function (f) { f(); });
+			return;
+		}
+		if (msg.method === "Target.dispatchMessageFromTarget") msg = JSON.parse(msg.params.message);
+		else if (msg.id) return; // outer ack/error
+		if (msg.id && pending[msg.id]) {
+			var p = pending[msg.id]; delete pending[msg.id];
+			if (msg.error) p.reject(new Error(JSON.stringify(msg.error))); else p.resolve(msg.result);
+		} else if (msg.method === "Console.messageAdded" && cmd === "console") {
+			var c = msg.params.message;
+			console.log(c.level, c.text);
+		}
+	};
+	ws.onerror = function () { console.error("cannot connect: is ios_webkit_debug_proxy running, and is the Safari inspector window closed?"); process.exit(1); };
+	ws.onopen = function () {
+		new Promise(function (res) { if (targetId) res(); else targetWaiters.push(res); }).then(run).then(function () { process.exit(0); }, function (e) { console.error("ERROR:", e.message); process.exit(1); });
+	};
 }
 
 if (PAGE) connect();

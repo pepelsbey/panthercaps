@@ -2,13 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Prompter</title>
+<title>Panthercaps</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="Prompter">
+<meta name="apple-mobile-web-app-title" content="Panthercaps">
 <meta name="format-detection" content="telephone=no">
-<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/32.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/152.png">
+<link rel="apple-touch-icon" sizes="167x167" href="icons/167.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/180.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -20,6 +23,7 @@
 		<span id="offline-badge" class="badge"></span>
 		<div class="spacer"></div>
 		<button id="btn-reorder" class="btn hidden">Reorder</button>
+		<button id="btn-export" class="btn hidden">Export</button>
 		<button id="btn-new" class="btn primary"><svg class="icon sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>New</button>
 	</header>
 	<div id="hint" class="hidden">Tip: Share, then Add to Home Screen. The installed app keeps its own songs, so add your lyrics there. <b>Tap to dismiss</b></div>
@@ -35,7 +39,17 @@
 		<button id="btn-edit-save" class="btn primary">Save</button>
 	</header>
 	<input id="edit-title" type="text" placeholder="Title" autocapitalize="words">
-	<textarea id="edit-text" placeholder="Lyrics. Lines like [Chorus] are highlighted."></textarea>
+	<textarea id="edit-text" placeholder="Lyrics. Lines starting with &gt;, like &gt; Em – D – Am, are highlighted." autocorrect="off" spellcheck="false"></textarea>
+</section>
+
+<section id="export-view" class="view hidden">
+	<header class="bar">
+		<button id="btn-export-done" class="btn">Done</button>
+		<h1>Export</h1>
+		<div class="spacer"></div>
+		<button id="btn-export-copy" class="btn primary">Copy</button>
+	</header>
+	<textarea id="export-text" readonly aria-label="All songs as text"></textarea>
 </section>
 
 <section id="prompter-view" class="view hidden">
@@ -68,6 +82,8 @@
 	</div>
 </section>
 
+<script src="songs.js"></script>
+<script src="preloaded.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

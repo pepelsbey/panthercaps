@@ -1,12 +1,13 @@
-/* Prompter: written in ES5 for iOS 12 Safari (no ?., ??, modules, etc.) */
+/* Panthercaps: written in ES5 for iOS 12 Safari (no ?., ??, modules, etc.) */
 (function () {
 	"use strict";
 
 	var KEY_SONGS = "pc.songs";
 	var KEY_SETTINGS = "pc.settings";
-	var KEY_SEEDED = "pc.seeded";
+	var KEY_PRELOADED = "pc.preloaded";
 	var DEFAULTS = { size: 56, speed: 30 };
-	// Speed is in pixels per second. 5 is already ~15 s per line at the default size; 100 is ~0.8 s.
+	// Speed is in pixels per second at the default size, and scales with the text size, so resizing keeps
+	// the pace in lines. 5 is already ~15 s per line; 100 is ~0.8 s.
 	var SIZE_MIN = 24, SIZE_MAX = 120, SIZE_STEP = 4;
 	var SPEED_MIN = 5, SPEED_MAX = 100, SPEED_STEP = 5;
 
@@ -25,22 +26,25 @@
 	var songs = load(KEY_SONGS, []);
 	var settings = load(KEY_SETTINGS, {});
 
-	var EXAMPLE = "[Verse 1]\nThis is where your lyrics go\nOne line at a time, big and bright\nScroll along while you play the show\nEyes on the words, hands on the strings\n\n[Chorus]\nSing it loud, sing it clear\nEverybody's gonna hear\nSing it loud, sing it clear\nThe prompter's right here\n\n[Verse 2]\nTap + New to add a song of your own\nTap Edit to change it, or Reorder and drag songs into setlist order\nEverything stays saved on this device\nSo it works with no internet at all\n\n[Outro]\nThank you, goodnight";
-	// First run only: give the user something to try. Never re-added after they delete it.
-	if (!load(KEY_SEEDED, false)) {
-		if (!songs.length) songs.push({ id: "l:example", title: "Example Song", text: EXAMPLE });
-		save(KEY_SONGS, songs);
-		save(KEY_SEEDED, true);
-	}
+	// Songs bundled from lyrics/*.md, see preloaded.js. KEY_PRELOADED remembers what was last delivered.
+	var preloaded = load(KEY_PRELOADED, {});
+	window.mergePreloaded(songs, preloaded, window.PRELOADED_SONGS || []);
+	save(KEY_SONGS, songs);
+	save(KEY_PRELOADED, preloaded);
 	var current = -1; // index in songs
 	var editingId = null;
+	var editOriginal = null; // the fields as opened, to tell if Cancel would lose changes
 	var editFrom = "list";   // where Cancel/Save return to
 	var editScroll = 0;      // prompter scroll position to restore after editing
 	var reordering = false;
 
-	var views = { list: $("list-view"), edit: $("edit-view"), prompter: $("prompter-view") };
+	var views = { list: $("list-view"), edit: $("edit-view"), export: $("export-view"), prompter: $("prompter-view") };
+	var shown = "list";
 	function show(name) {
-		for (var k in views) if (views.hasOwnProperty(k)) views[k].classList.toggle("hidden", k !== name);
+		for (var k in views) if (Object.prototype.hasOwnProperty.call(views, k)) views[k].classList.toggle("hidden", k !== name);
+		shown = name;
+		// The editor lets iOS scroll the page to keep the caret above the keyboard; undo that on the way out
+		window.scrollTo(0, 0);
 	}
 
 	var statusTimer = 0;
@@ -134,6 +138,7 @@
 		$("btn-reorder").textContent = reordering ? "Done" : "Reorder";
 		$("btn-reorder").classList.toggle("primary", reordering);
 		$("btn-new").classList.toggle("hidden", reordering);
+		$("btn-export").classList.toggle("hidden", reordering || !songs.length);
 		if (!songs.length) {
 			var li = document.createElement("li");
 			li.className = "empty";
@@ -141,6 +146,7 @@
 			ul.appendChild(li);
 			return;
 		}
+		var pad = String(songs.length).replace(/\d/g, "0"); // "00" for 10–99 songs
 		songs.forEach(function (song, i) {
 			var li = document.createElement("li");
 			li.setAttribute("data-id", song.id);
@@ -148,7 +154,8 @@
 			t.className = "title";
 			var n = document.createElement("span");
 			n.className = "num";
-			n.textContent = (i + 1) + ".";
+			// Zero-padded to the longest number, so titles stay aligned past 9 songs
+			n.textContent = (pad + (i + 1)).slice(-pad.length) + ".";
 			t.appendChild(n);
 			t.appendChild(document.createTextNode(song.title));
 			li.appendChild(t);
@@ -177,8 +184,15 @@
 		songs.forEach(function (s) { if (s.id === id) song = s; });
 		$("edit-title").value = song ? song.title : "";
 		$("edit-text").value = song ? song.text : "";
+		editOriginal = { title: $("edit-title").value, text: $("edit-text").value };
 		$("btn-edit-delete").classList.toggle("hidden", !song);
 		show("edit");
+	}
+
+	function cancelEdit() {
+		var changed = $("edit-title").value !== editOriginal.title || $("edit-text").value !== editOriginal.text;
+		if (changed && !window.confirm("Discard your changes?")) return;
+		if (editFrom === "prompter") returnToPrompter(false); else show("list");
 	}
 
 	function saveEdit() {
@@ -208,9 +222,34 @@
 		if (!window.confirm("Delete this song?")) return;
 		songs = songs.filter(function (s) { return s.id !== editingId; });
 		save(KEY_SONGS, songs);
+		delete settings[editingId];
+		save(KEY_SETTINGS, settings);
 		editFrom = "list";
 		renderList();
 		show("list");
+	}
+
+	/* ---------- export ---------- */
+
+	/* Songs live only on the device, so this is the backup: the whole setlist in the lyrics/*.md format, each
+	   song starting with its "# Title" line. Copy it out and split it into files to keep it in the repo. */
+	function openExport() {
+		$("export-text").value = songs.map(function (s) {
+			return "# " + s.title + "\n\n" + s.text.replace(/\s+$/, "") + "\n";
+		}).join("\n\n");
+		$("btn-export-copy").textContent = "Copy";
+		show("export");
+		$("export-text").scrollTop = 0;
+	}
+
+	// iOS 12 has no Clipboard API. Selecting a read-only textarea and running the copy command works there
+	// without bringing up the keyboard; if it fails, the text stays selected for Copy in the iOS menu.
+	function copyExport() {
+		var ta = $("export-text"), ok = false;
+		ta.select();
+		ta.setSelectionRange(0, ta.value.length);
+		try { ok = document.execCommand("copy"); } catch (e) { /* stays selected */ }
+		$("btn-export-copy").textContent = ok ? "Copied" : "Selected";
 	}
 
 	/* ---------- offline status ---------- */
@@ -248,7 +287,9 @@
 	var lastT = 0;
 	var rafId = 0;
 	var cfg = { size: DEFAULTS.size, speed: DEFAULTS.speed };
-	var SECTION_RE = /^\s*(\[.*\]|\(.*\)|(intro|verse|pre-?chorus|chorus|bridge|solo|interlude|outro|refrain|hook)\b[^a-z]*\d*\s*:?)\s*$/i;
+	// Chords and cues are Markdown blockquotes ("> Em – D – Am"), the same as in lyrics/*.md. [Chorus], (Chorus)
+	// and bare section names are still highlighted for songs written before that.
+	var SECTION_RE = /^\s*(>.*|\[.*\]|\(.*\)|(intro|verse|pre-?chorus|chorus|bridge|solo|interlude|outro|refrain|hook)\b[^a-z]*\d*\s*:?)\s*$/i;
 
 	function renderLyrics(song) {
 		lyrics.innerHTML = "";
@@ -262,7 +303,7 @@
 				d.className = "gap";
 			} else {
 				d.className = "line" + (SECTION_RE.test(line) ? " section" : "");
-				d.textContent = line.replace(/^\[(.*)\]$/, "$1");
+				d.textContent = line.replace(/^\s*>\s*/, "").replace(/^\[(.*)\]$/, "$1");
 			}
 			lyrics.appendChild(d);
 		});
@@ -277,6 +318,12 @@
 		$("btn-bigger").disabled = cfg.size >= SIZE_MAX;
 		$("btn-slower").disabled = cfg.speed <= SPEED_MIN;
 		$("btn-faster").disabled = cfg.speed >= SPEED_MAX;
+	}
+
+	// Saved only when changed, so songs left at the defaults follow any later change to DEFAULTS
+	function changeCfg(name, delta, min, max) {
+		cfg[name] = clamp(cfg[name] + delta, min, max);
+		applyCfg();
 		settings[songs[current].id] = { size: cfg.size, speed: cfg.speed };
 		save(KEY_SETTINGS, settings);
 	}
@@ -305,7 +352,7 @@
 		lastT = t;
 		// If scrollTop differs from our float position the user moved it; follow them
 		if (Math.abs(scroller.scrollTop - pos) > 2) pos = scroller.scrollTop;
-		pos += cfg.speed * dt / 1000;
+		pos += cfg.speed * (cfg.size / DEFAULTS.size) * dt / 1000;
 		scroller.scrollTop = pos;
 		var max = scroller.scrollHeight - scroller.clientHeight;
 		if (pos >= max) { pos = max; stop(); return; }
@@ -350,9 +397,10 @@
 
 	$("btn-reorder").addEventListener("click", function () { reordering = !reordering; renderList(); });
 	$("btn-new").addEventListener("click", function () { openEditor(null); });
-	$("btn-edit-cancel").addEventListener("click", function () {
-		if (editFrom === "prompter") returnToPrompter(false); else show("list");
-	});
+	$("btn-export").addEventListener("click", openExport);
+	$("btn-export-done").addEventListener("click", function () { show("list"); });
+	$("btn-export-copy").addEventListener("click", copyExport);
+	$("btn-edit-cancel").addEventListener("click", cancelEdit);
 	$("btn-edit-song").addEventListener("click", function () {
 		stop();
 		editScroll = scroller.scrollTop;
@@ -366,17 +414,17 @@
 	$("btn-prev").addEventListener("click", function () { openSong(current - 1); });
 	$("btn-next").addEventListener("click", function () { openSong(current + 1); });
 	$("btn-top").addEventListener("click", function () { scroller.scrollTop = 0; pos = 0; });
-	$("btn-slower").addEventListener("click", function () { cfg.speed = clamp(cfg.speed - SPEED_STEP, SPEED_MIN, SPEED_MAX); applyCfg(); });
-	$("btn-faster").addEventListener("click", function () { cfg.speed = clamp(cfg.speed + SPEED_STEP, SPEED_MIN, SPEED_MAX); applyCfg(); });
-	$("btn-smaller").addEventListener("click", function () { cfg.size = clamp(cfg.size - SIZE_STEP, SIZE_MIN, SIZE_MAX); applyCfg(); });
-	$("btn-bigger").addEventListener("click", function () { cfg.size = clamp(cfg.size + SIZE_STEP, SIZE_MIN, SIZE_MAX); applyCfg(); });
+	$("btn-slower").addEventListener("click", function () { changeCfg("speed", -SPEED_STEP, SPEED_MIN, SPEED_MAX); });
+	$("btn-faster").addEventListener("click", function () { changeCfg("speed", SPEED_STEP, SPEED_MIN, SPEED_MAX); });
+	$("btn-smaller").addEventListener("click", function () { changeCfg("size", -SIZE_STEP, SIZE_MIN, SIZE_MAX); });
+	$("btn-bigger").addEventListener("click", function () { changeCfg("size", SIZE_STEP, SIZE_MIN, SIZE_MAX); });
 
 	// Block pinch/rubber-band page zoom and bounce outside scrollable areas
 	document.addEventListener("gesturestart", function (e) { e.preventDefault(); }, false);
 	document.addEventListener("touchmove", function (e) {
 		var el = e.target;
 		while (el && el !== document.body) {
-			if (el === scroller || el.id === "song-list" || el.id === "edit-text") return;
+			if (el === scroller || el.id === "song-list" || el.id === "edit-text" || el.id === "export-text") return;
 			el = el.parentNode;
 		}
 		e.preventDefault();
@@ -389,7 +437,7 @@
 	var tapStart = null, lastTapEnd = 0;
 	function clickTarget(t) {
 		while (t && t.nodeType === 1) {
-			if (t.tagName === "BUTTON") return t.disabled ? null : t;
+			if (t.tagName === "BUTTON") return t;
 			if (t.id === "scroller" || t.id === "song-list") break;
 			t = t.parentNode;
 		}
@@ -408,18 +456,22 @@
 		if (!isTap) return;
 		if (now - lastTapEnd < 350) {
 			e.preventDefault(); // stops Safari's double-tap gesture (and the click it would have sent)
-			var btn = clickTarget(e.target) || e.target;
+			lastTapEnd = 0;
+			var btn = clickTarget(e.target);
+			if (btn && btn.disabled) return;
 			var ev = document.createEvent("MouseEvents");
 			ev.initEvent("click", true, true);
-			btn.dispatchEvent(ev);
-			lastTapEnd = 0;
+			(btn || e.target).dispatchEvent(ev);
 		} else {
 			lastTapEnd = now;
 		}
 	}, { passive: false });
 
-	// The page must never move: if iOS scrolls it anyway, put it straight back
+	/* The page must never move: if iOS scrolls it anyway, put it straight back. Except in the editor, where
+	   the on-screen keyboard covers the bottom of the textarea and iOS scrolls the page to keep the caret
+	   visible; show() resets it when leaving. */
 	window.addEventListener("scroll", function () {
+		if (shown === "edit") return;
 		if (window.pageYOffset !== 0 || window.pageXOffset !== 0) window.scrollTo(0, 0);
 	}, false);
 

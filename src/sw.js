@@ -1,8 +1,10 @@
-/* Service worker: precache the app shell, then serve it cache-first so the app works with no network.
-   VERSION is stamped by tools/build-sw.js whenever an app file changes; a new version replaces the old cache. */
-var VERSION = "edd5a3088e";
+/* Service worker: precache the app shell, then serve it cache-first so the app works with no network. Icons
+   aren't precached: they're only fetched online, when adding to the Home Screen.
+   VERSION and FILES are stamped into dist/sw.js by tools/build.js: the version is a hash of the app files, and a new
+   version replaces the old cache. */
+var VERSION = "dev";
 var CACHE = "prompter-" + VERSION;
-var FILES = ["./", "index.html", "style.css", "app.js", "icon.png", "manifest.webmanifest"];
+var FILES = [];
 
 self.addEventListener("install", function (e) {
 	e.waitUntil(

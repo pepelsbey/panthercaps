@@ -1,0 +1,24 @@
+{
+	"name": "panthercaps",
+	"private": true,
+	"description": "Offline lyrics prompter for iPad",
+	"scripts": {
+		"start": "node tools/serve.js",
+		"build": "node tools/build.js",
+		"test": "eslint . && stylelint \"src/**/*.css\" && node --test \"test/*.test.js\""
+	},
+	"engines": {
+		"node": ">=22"
+	},
+	"browserslist": [
+		"iOS >= 12.2"
+	],
+	"devDependencies": {
+		"@eslint/js": "^10.0.1",
+		"eslint": "^10.15.0",
+		"eslint-plugin-compat": "^7.0.2",
+		"globals": "^17.14.0",
+		"stylelint": "^18.0.0",
+		"stylelint-no-unsupported-browser-features": "^8.1.2"
+	}
+}
