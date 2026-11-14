@@ -21,11 +21,9 @@
 <section id="list-view" class="view view--unselectable">
 	<header class="bar">
 		<h1 class="bar__title">Songs</h1>
-		<span id="offline-badge" class="badge"></span>
 		<div class="bar__spacer"></div>
 		<button id="btn-reorder" class="btn" hidden>Reorder</button>
-		<button id="btn-export" class="btn" hidden>Export</button>
-		<button id="btn-new" class="btn btn--primary"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>New</button>
+		<button id="btn-new" class="btn btn--primary">New</button>
 	</header>
 	<div id="hint" class="notice notice--info" hidden>Tip: Share, then Add to Home Screen. The installed app keeps its own songs, so add your lyrics there. <b>Tap to dismiss</b></div>
 	<div id="status" class="notice notice--warning"></div>
@@ -41,16 +39,6 @@
 	</header>
 	<input id="edit-title" class="field field--title" type="text" placeholder="Title" autocapitalize="words">
 	<textarea id="edit-text" class="field field--area" placeholder="Lyrics. Lines starting with &gt;, like &gt; Em – D – Am, are highlighted." autocorrect="off" spellcheck="false"></textarea>
-</section>
-
-<section id="export-view" class="view" hidden>
-	<header class="bar">
-		<button id="btn-export-done" class="btn">Done</button>
-		<h1 class="bar__title">Export</h1>
-		<div class="bar__spacer"></div>
-		<button id="btn-export-copy" class="btn btn--primary">Copy</button>
-	</header>
-	<textarea id="export-text" class="field field--area" readonly aria-label="All songs as text"></textarea>
 </section>
 
 <section id="prompter-view" class="view view--unselectable prompter" hidden>

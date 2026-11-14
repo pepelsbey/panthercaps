@@ -47,7 +47,6 @@
 	--play-size: 108px;
 	--bar-height: 80px;
 	--icon-size: 36px;
-	--icon-size-sm: 28px;
 	--icon-size-lg: 62px;
 	--font-size-button: 22px;
 	--font-size-title: 26px;
@@ -75,7 +74,6 @@
 		--play-size: 76px;
 		--bar-height: 60px;
 		--icon-size: 28px;
-		--icon-size-sm: 22px;
 		--icon-size-lg: 46px;
 		--font-size-button: 18px;
 		--font-size-title: 22px;
@@ -91,7 +89,6 @@
 @media (max-width: 359px) and (min-height: 501px) {
 	:root {
 		--button-padding: 9px;
-		--icon-size-sm: 20px;
 		--font-size-button: 16px;
 		--font-size-title: 20px;
 	}
@@ -108,7 +105,6 @@
 		--play-size: 64px;
 		--bar-height: 52px;
 		--icon-size: 26px;
-		--icon-size-sm: 20px;
 		--icon-size-lg: 38px;
 		--font-size-button: 18px;
 		--font-size-title: 22px;

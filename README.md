@@ -4,7 +4,7 @@ A lyrics prompter for the stage. It scrolls the lyrics at the speed you set, hig
 
 ## Setting up the iPad
 
-1. Open https://pepelsbey.github.io/panthercaps/ in Safari and wait for the green "✓ Offline" badge.
+1. Open https://pepelsbey.github.io/panthercaps/ in Safari and let it load, so it can save itself for offline use.
 2. Tap Share, then Add to Home Screen, and from now on open the app from the Home Screen.
 3. Set Settings → Display & Brightness → Auto-Lock to Never, so the screen stays on during the show.
 
@@ -21,12 +21,11 @@ Tap a song in the list to open it.
 
 ## Managing songs
 
-- **+ New** adds a song. Lines starting with `>`, like `> Em – D – Am`, are highlighted as chords and cues.
+- **New** adds a song. Lines starting with `>`, like `> Em – D – Am`, are highlighted as chords and cues.
 - The pencil next to a song edits or deletes it.
 - **Reorder** lets you drag songs around the setlist by their handles.
-- **Export** shows all songs as text, so you can copy them somewhere safe.
 
-Songs are stored only on the iPad, with no backup or sync, so export the ones you add there now and then.
+Songs added in the app are stored only on the iPad, with no backup or sync. To keep one, add it to the repository, see below.
 
 The app updates itself: open it while online, and the new version loads the next time the app starts.
 
@@ -46,8 +45,6 @@ The `# Title` line is optional: without it, the file name is the title. After a 
 - New songs are added at the end of the setlist.
 - A changed file updates the song, unless it was edited on the device.
 - A song deleted on the device doesn't come back. Renaming a file adds it again as a new song.
-
-An export from the app is in the same format, so split it into files to keep those songs here.
 
 ## Development
 

@@ -46,7 +46,7 @@
 	var editScroll = 0;      // prompter scroll position to restore after editing
 	var reordering = false;
 
-	var views = { list: $("list-view"), edit: $("edit-view"), export: $("export-view"), prompter: $("prompter-view") };
+	var views = { list: $("list-view"), edit: $("edit-view"), prompter: $("prompter-view") };
 	var shown = "list";
 	function show(name) {
 		for (var k in views) if (Object.prototype.hasOwnProperty.call(views, k)) views[k].hidden = k !== name;
@@ -146,11 +146,10 @@
 		$("btn-reorder").textContent = reordering ? "Done" : "Reorder";
 		$("btn-reorder").classList.toggle("btn--primary", reordering);
 		$("btn-new").hidden = reordering;
-		$("btn-export").hidden = reordering || !songs.length;
 		if (!songs.length) {
 			var li = document.createElement("li");
 			li.className = "song-list__item song-list__item--empty";
-			li.textContent = "No songs yet. Tap + New to add one.";
+			li.textContent = "No songs yet. Tap New to add one.";
 			ul.appendChild(li);
 			return;
 		}
@@ -241,41 +240,11 @@
 		show("list");
 	}
 
-	/* ---------- export ---------- */
+	/* ---------- offline ---------- */
 
-	/* Songs live only on the device, so this is the backup: the whole setlist in the lyrics/*.md format, each
-	   song starting with its "# Title" line. Copy it out and split it into files to keep it in the repo. */
-	function openExport() {
-		$("export-text").value = songs.map(function (s) {
-			return "# " + s.title + "\n\n" + s.text.replace(/\s+$/, "") + "\n";
-		}).join("\n\n");
-		$("btn-export-copy").textContent = "Copy";
-		show("export");
-		$("export-text").scrollTop = 0;
-	}
-
-	// iOS 12 has no Clipboard API. Selecting a read-only textarea and running the copy command works there
-	// without bringing up the keyboard; if it fails, the text stays selected for Copy in the iOS menu.
-	function copyExport() {
-		var ta = $("export-text"), ok = false;
-		ta.select();
-		ta.setSelectionRange(0, ta.value.length);
-		try { ok = document.execCommand("copy"); } catch (e) { /* stays selected */ }
-		$("btn-export-copy").textContent = ok ? "Copied" : "Selected";
-	}
-
-	/* ---------- offline status ---------- */
-
-	// Only shown once everything is cached; otherwise there is nothing the user can act on
 	function initOffline() {
 		if (!("serviceWorker" in navigator)) return;
-		navigator.serviceWorker.register("sw.js").then(function () {
-			return navigator.serviceWorker.ready;
-		}).then(function () {
-			var b = $("offline-badge");
-			b.textContent = "✓ Offline";
-			b.className = "badge badge--ok";
-		}, function () {});
+		navigator.serviceWorker.register("sw.js").catch(function () {});
 		// Ask the browser not to evict our data (not supported on older iOS)
 		if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
 	}
@@ -423,9 +392,6 @@
 
 	$("btn-reorder").addEventListener("click", function () { reordering = !reordering; renderList(); });
 	$("btn-new").addEventListener("click", function () { openEditor(null); });
-	$("btn-export").addEventListener("click", openExport);
-	$("btn-export-done").addEventListener("click", function () { show("list"); });
-	$("btn-export-copy").addEventListener("click", copyExport);
 	$("btn-edit-cancel").addEventListener("click", cancelEdit);
 	$("btn-edit-song").addEventListener("click", function () {
 		stop();
@@ -450,7 +416,7 @@
 	document.addEventListener("touchmove", function (e) {
 		var el = e.target;
 		while (el && el !== document.body) {
-			if (el === scroller || el.id === "song-list" || el.id === "edit-text" || el.id === "export-text") return;
+			if (el === scroller || el.id === "song-list" || el.id === "edit-text") return;
 			el = el.parentNode;
 		}
 		e.preventDefault();

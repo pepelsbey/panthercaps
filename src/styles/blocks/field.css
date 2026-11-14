@@ -1,4 +1,4 @@
-/* The text fields of the editor and export screens. Edge to edge, with the text kept in the column */
+/* The text fields of the editor screen. Edge to edge, with the text kept in the column */
 .field {
 	display: block;
 	width: 100%;

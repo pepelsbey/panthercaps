@@ -1,4 +1,4 @@
-/* The top bar of the list, editor and export screens. Edge to edge, so the sides keep clear of a notch */
+/* The top bar of the list and editor screens. Edge to edge, so the sides keep clear of a notch */
 .bar {
 	position: relative;
 	display: flex;
@@ -26,11 +26,4 @@
 	top: calc((var(--bar-height) - var(--button-size)) / 2);
 	left: 50%;
 	margin: 0 0 0 calc(var(--button-size) / -2);
-}
-
-/* The Offline badge is the first to go when the buttons need the room */
-@media (max-width: 459px) {
-	.bar__title {
-		margin-left: 4px;
-	}
 }

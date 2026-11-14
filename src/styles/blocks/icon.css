@@ -7,15 +7,6 @@
 	fill: currentColor;
 }
 
-/* Next to a word, like in + New. Sized by the em of the button, so it follows the font size */
-.icon--sm {
-	display: inline-block;
-	width: var(--icon-size-sm);
-	height: var(--icon-size-sm);
-	margin: 0 0.35em 0 0;
-	vertical-align: -0.27em;
-}
-
 .icon--lg {
 	width: var(--icon-size-lg);
 	height: var(--icon-size-lg);
