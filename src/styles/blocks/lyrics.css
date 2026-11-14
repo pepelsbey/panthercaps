@@ -1,0 +1,36 @@
+/* The lyrics on the playback screen. app.js sets the font size, and the lines follow it in em */
+.lyrics {
+	padding: 12px 5% 60vh;
+	font-size: 56px;
+	font-weight: 600;
+	line-height: 1.35;
+	word-wrap: break-word;
+}
+
+/* Lines up with the edit button in the corner: as tall, and stops short of it */
+.lyrics__title {
+	margin-bottom: 20px;
+	padding-right: calc(var(--button-size) + 16px);
+	overflow: hidden;
+	font-size: 52px;
+	line-height: var(--button-size);
+	color: var(--color-info);
+	white-space: nowrap;
+	text-overflow: clip;
+}
+
+.lyrics__line {
+	min-height: 1.35em;
+	white-space: pre-wrap;
+}
+
+/* Chords and cues: lines starting with > */
+.lyrics__line--cue {
+	margin-top: 0.4em;
+	color: var(--color-cue);
+	letter-spacing: 0.04em;
+}
+
+.lyrics__gap {
+	height: 0.8em;
+}

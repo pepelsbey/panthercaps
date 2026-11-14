@@ -1,0 +1,67 @@
+/* Buttons. The colors are custom properties, so the variants only set those, and :active and :disabled
+   work the same for all of them */
+.btn {
+	--btn-background: var(--color-control);
+	--btn-background-active: var(--color-control-active);
+	--btn-border: var(--color-control-border);
+	min-width: var(--button-size);
+	height: var(--button-size);
+	margin: 0 4px;
+	padding: 0 22px;
+	font-size: 22px;
+	color: var(--color-text);
+	background: var(--btn-background);
+	border: 1px solid var(--btn-border);
+	border-radius: var(--radius);
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.btn:active {
+	background: var(--btn-background-active);
+}
+
+.btn:disabled {
+	--btn-background-active: var(--btn-background);
+	opacity: 0.25;
+}
+
+.btn--primary {
+	--btn-background: var(--color-accent);
+	--btn-background-active: var(--color-accent-active);
+	--btn-border: var(--color-accent);
+}
+
+.btn--danger {
+	--btn-background: var(--color-danger);
+	--btn-background-active: var(--color-danger-active);
+	--btn-border: var(--color-danger-active);
+}
+
+/* Square, with only an icon */
+.btn--icon {
+	flex: none;
+	width: var(--button-size);
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+}
+
+/* Only the icon, dimmed when pressed */
+.btn--bare {
+	--btn-background: transparent;
+	--btn-background-active: transparent;
+	border: 0;
+	border-radius: 0;
+}
+
+.btn--bare:active {
+	opacity: 0.5;
+}
+
+/* The big round Play */
+.btn--round {
+	width: 108px;
+	height: 108px;
+	border-radius: 50%;
+}

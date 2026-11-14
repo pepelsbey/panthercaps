@@ -1,0 +1,6 @@
+/* Utilities: last, so they win over the blocks */
+
+/* The hidden attribute, which blocks like .view would otherwise override with their display */
+[hidden] {
+	display: none !important; /* stylelint-disable-line declaration-no-important */
+}

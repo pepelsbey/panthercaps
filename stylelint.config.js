@@ -4,6 +4,14 @@
 module.exports = {
 	plugins: ["stylelint-no-unsupported-browser-features"],
 	rules: {
+		// Classes only, named in BEM (.block, .block__element, .block--modifier), so specificity stays flat
+		// and the order of src/styles/index.css decides what wins
+		"selector-max-id": 0,
+		"selector-max-specificity": "0,2,0",
+		"selector-class-pattern": ["^[a-z][a-z0-9]*(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?(--[a-z0-9]+(-[a-z0-9]+)*)?$", {
+			message: function (selector) { return "Expected class " + selector + " to be in BEM: block__element--modifier"; }
+		}],
+		"declaration-no-important": true,
 		"plugin/no-unsupported-browser-features": [true, {
 			severity: "error",
 			ignore: [

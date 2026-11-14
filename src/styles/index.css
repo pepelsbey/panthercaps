@@ -1,0 +1,19 @@
+/* Panthercaps styles. The order of the imports is the cascade order, from the most general to the most
+   specific: tokens, base, layout, blocks, utilities. tools/build.js joins them into one style.css.
+   Blocks are named in BEM: .block, .block__element, .block--modifier. Written for iOS 12 Safari, so
+   there are no cascade layers or nesting, and only class selectors, to keep specificity flat. */
+@import "tokens.css";
+@import "base.css";
+@import "layout.css";
+@import "blocks/button.css";
+@import "blocks/icon.css";
+@import "blocks/badge.css";
+@import "blocks/notice.css";
+@import "blocks/bar.css";
+@import "blocks/song-list.css";
+@import "blocks/field.css";
+@import "blocks/lyrics.css";
+@import "blocks/stepper.css";
+@import "blocks/controls.css";
+@import "blocks/prompter.css";
+@import "utilities.css";

@@ -1,0 +1,46 @@
+/* Tokens: every color, and the sizes that several blocks share */
+:root {
+	/* Surfaces */
+	--color-background: #000;
+	--color-surface: #151515;
+	--color-field: #111;
+	--color-border: #333;
+	--color-divider: #222;
+	--color-pressed: #1c1c1e;
+	--shadow-raised: 0 6px 24px rgba(0, 0, 0, 0.8);
+
+	/* Text */
+	--color-text: #fff;
+	--color-text-secondary: #d1d1d6;
+	--color-text-muted: #8e8e93;
+
+	/* Controls */
+	--color-control: #2c2c2e;
+	--color-control-translucent: rgba(44, 44, 46, 0.88);
+	--color-control-active: #48484a;
+	--color-control-border: #444;
+	--color-control-divider: #636366;
+
+	/* Accents, with lighter versions for pressed buttons */
+	--color-accent: #0a84ff;
+	--color-accent-active: #47a3ff;
+	--color-success: #30d158;
+	--color-success-active: #64dc82;
+	--color-success-background: #0d3a1a;
+	--color-on-success: #000;
+	--color-warning: #ff9f0a;
+	--color-warning-background: #3a2a00;
+	--color-danger: #d70015;
+	--color-danger-active: #ff453a;
+	--color-info: #64d2ff;
+	--color-info-background: #0b1a22;
+	--color-cue: #ffd60a;
+
+	/* Sizes */
+	--font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	--gutter: 12px;
+	--radius: 12px;
+	--button-size: 64px;
+	--bar-height: 80px;
+	--controls-height: 128px;
+}

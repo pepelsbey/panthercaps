@@ -1,0 +1,27 @@
+/* Inline SVG icons on a 24×24 grid, in the text color */
+.icon {
+	display: block;
+	width: 36px;
+	height: 36px;
+	margin: 0 auto;
+	fill: currentColor;
+}
+
+/* Next to a word, like in + New */
+.icon--sm {
+	display: inline-block;
+	width: 28px;
+	height: 28px;
+	margin: 0 8px 0 0;
+	vertical-align: -6px;
+}
+
+.icon--lg {
+	width: 62px;
+	height: 62px;
+}
+
+/* Play and Pause share a button, and .prompter--playing swaps them */
+.icon--pause {
+	display: none;
+}

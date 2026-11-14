@@ -1,0 +1,33 @@
+/* The text fields of the editor and export screens */
+.field {
+	display: block;
+	width: 100%;
+	margin: 0;
+	color: var(--color-text);
+	border: 0;
+	border-radius: 0;
+	-webkit-appearance: none;
+	appearance: none;
+	-webkit-user-select: text;
+	user-select: text;
+}
+
+.field--title {
+	flex-shrink: 0;
+	height: 56px;
+	padding: 0 16px;
+	font-size: 24px;
+	background: var(--color-field);
+	border-bottom: 1px solid var(--color-border);
+}
+
+/* Fills the rest of the screen */
+.field--area {
+	flex: 1;
+	min-height: 0;
+	padding: 16px;
+	font-size: 22px;
+	line-height: 1.4;
+	background: var(--color-background);
+	resize: none;
+}

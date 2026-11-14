@@ -1,0 +1,19 @@
+/* Base: the reset, and touch behavior for the whole page */
+* {
+	box-sizing: border-box;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-touch-callout: none;
+	/* No double-tap-to-zoom: iOS ignores user-scalable=no, and a zoomed page looks frozen */
+	touch-action: manipulation;
+}
+
+html,
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	font-family: var(--font-family);
+	color: var(--color-text);
+	background: var(--color-background);
+}

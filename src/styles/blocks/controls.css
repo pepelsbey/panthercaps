@@ -1,0 +1,33 @@
+/* The playback controls along the bottom, in a single row:
+   Songs | Speed | Previous, Play, Next | Size | Top */
+.controls {
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: space-between;
+	height: var(--controls-height);
+	padding: 10px var(--gutter);
+	background: var(--color-surface);
+	border-top: 1px solid var(--color-border);
+}
+
+.controls__row {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.controls__transport {
+	display: flex;
+	align-items: center;
+}
+
+/* Previous and Next: only the chevrons, centred on Play */
+.controls__skip {
+	width: 52px;
+}
+
+.controls__play {
+	margin: 0 4px;
+}

@@ -64,6 +64,8 @@ The app is in `src/`, and the build puts it together with the songs from `lyrics
 
 The app has to run on iOS 12 Safari, so it's written in ES5 with no modules, and the CSS goes without newer features like flexbox `gap`. `npm test` catches most of that, but not everything, so try changes on the iPad too.
 
+The styles are in `src/styles/`: the tokens, base and layout, then one file per block in `blocks/`, with classes named in BEM. `index.css` imports them in cascade order, and the build joins them into one file, so list any new file there.
+
 Offline mode works only on localhost or HTTPS, so the dev server opened on the iPad by its network address runs without it. Where it does work, the app shows the cached version first, so reload twice to see a change.
 
 To replace the icon, put a square PNG without transparency in `src/icons/512.png`, run `node tools/make-icons.js` and commit the results. It needs ImageMagick and zopflipng: `brew install imagemagick zopfli`.

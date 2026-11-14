@@ -20,7 +20,9 @@ http.createServer(function (req, res) {
 	var url;
 	try { url = decodeURIComponent(req.url.split("?")[0]); } catch { res.writeHead(400); return res.end("Bad URL"); }
 	if (url.slice(-1) === "/") url += "index.html";
-	if (url === "/index.html") {
+	// Once the service worker is installed, it serves the page from its cache, and only sw.js still reaches
+	// the server: the browser fetches it on every load to check for an update
+	if (url === "/index.html" || url === "/sw.js") {
 		try { build(); } catch (e) { console.error("Build failed:", e.message); }
 	}
 	var file = path.join(ROOT, url);

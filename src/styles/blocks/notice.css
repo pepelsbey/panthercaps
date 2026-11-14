@@ -1,0 +1,20 @@
+/* A message under the top bar of the list: the Home Screen tip and the save errors */
+.notice {
+	padding: 10px 20px;
+	font-size: 16px;
+}
+
+.notice:empty {
+	display: none;
+}
+
+.notice--info {
+	color: var(--color-info);
+	background: var(--color-info-background);
+}
+
+.notice--warning {
+	padding-top: 8px;
+	padding-bottom: 8px;
+	color: var(--color-warning);
+}

@@ -1,0 +1,29 @@
+/* The top bar of the list, editor and export screens */
+.bar {
+	position: relative;
+	display: flex;
+	flex-shrink: 0;
+	align-items: center;
+	height: var(--bar-height);
+	padding: 0 var(--gutter);
+	background: var(--color-surface);
+	border-bottom: 1px solid var(--color-border);
+}
+
+.bar__title {
+	margin: 0 12px;
+	font-size: 26px;
+	font-weight: 600;
+}
+
+.bar__spacer {
+	flex: 1;
+}
+
+/* An icon button in the middle of the bar, like Delete in the editor */
+.bar__center {
+	position: absolute;
+	top: calc((var(--bar-height) - var(--button-size)) / 2);
+	left: 50%;
+	margin: 0 0 0 calc(var(--button-size) / -2);
+}

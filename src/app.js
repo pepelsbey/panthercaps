@@ -41,7 +41,7 @@
 	var views = { list: $("list-view"), edit: $("edit-view"), export: $("export-view"), prompter: $("prompter-view") };
 	var shown = "list";
 	function show(name) {
-		for (var k in views) if (Object.prototype.hasOwnProperty.call(views, k)) views[k].classList.toggle("hidden", k !== name);
+		for (var k in views) if (Object.prototype.hasOwnProperty.call(views, k)) views[k].hidden = k !== name;
 		shown = name;
 		// The editor lets iOS scroll the page to keep the caret above the keyboard; undo that on the way out
 		window.scrollTo(0, 0);
@@ -91,7 +91,7 @@
 	function beginDrag(li, y) {
 		if (drag) return;
 		drag = { li: li, y: y, grab: y - li.getBoundingClientRect().top, timer: setInterval(dragTick, 16) };
-		li.classList.add("dragging");
+		li.classList.add("song-list__item--dragging");
 		placeDrag();
 	}
 
@@ -115,7 +115,7 @@
 
 	function makeGrip(li) {
 		var g = document.createElement("div");
-		g.className = "grip";
+		g.className = "song-list__grip";
 		g.addEventListener("touchstart", function (e) { e.preventDefault(); beginDrag(li, e.touches[0].clientY); }, false);
 		g.addEventListener("touchmove", function (e) { e.preventDefault(); if (drag) { drag.y = e.touches[0].clientY; placeDrag(); } }, false);
 		g.addEventListener("touchend", endDrag, false);
@@ -134,14 +134,14 @@
 		var top = ul.scrollTop;
 		ul.innerHTML = "";
 		if (songs.length < 2) reordering = false;
-		$("btn-reorder").classList.toggle("hidden", songs.length < 2);
+		$("btn-reorder").hidden = songs.length < 2;
 		$("btn-reorder").textContent = reordering ? "Done" : "Reorder";
-		$("btn-reorder").classList.toggle("primary", reordering);
-		$("btn-new").classList.toggle("hidden", reordering);
-		$("btn-export").classList.toggle("hidden", reordering || !songs.length);
+		$("btn-reorder").classList.toggle("btn--primary", reordering);
+		$("btn-new").hidden = reordering;
+		$("btn-export").hidden = reordering || !songs.length;
 		if (!songs.length) {
 			var li = document.createElement("li");
-			li.className = "empty";
+			li.className = "song-list__item song-list__item--empty";
 			li.textContent = "No songs yet. Tap + New to add one.";
 			ul.appendChild(li);
 			return;
@@ -149,11 +149,13 @@
 		var pad = String(songs.length).replace(/\d/g, "0"); // "00" for 10–99 songs
 		songs.forEach(function (song, i) {
 			var li = document.createElement("li");
+			li.className = "song-list__item";
 			li.setAttribute("data-id", song.id);
-			var t = document.createElement("div");
-			t.className = "title";
+			// A button that opens the song, or only text while reordering, when the grip is what's touched
+			var t = document.createElement(reordering ? "div" : "button");
+			t.className = "song-list__title";
 			var n = document.createElement("span");
-			n.className = "num";
+			n.className = "song-list__num";
 			// Zero-padded to the longest number, so titles stay aligned past 9 songs
 			n.textContent = (pad + (i + 1)).slice(-pad.length) + ".";
 			t.appendChild(n);
@@ -162,9 +164,11 @@
 			if (reordering) {
 				li.appendChild(makeGrip(li));
 			} else {
+				// The number's gap is only a margin, so without this, it would be read as "01.666"
+				t.setAttribute("aria-label", n.textContent + " " + song.title);
 				t.addEventListener("click", function () { openSong(i); });
 				var e = document.createElement("button");
-				e.className = "btn edit";
+				e.className = "btn btn--icon song-list__edit";
 				e.setAttribute("aria-label", "Edit " + song.title);
 				e.innerHTML = PENCIL_ICON;
 				e.addEventListener("click", function () { openEditor(song.id); });
@@ -185,7 +189,7 @@
 		$("edit-title").value = song ? song.title : "";
 		$("edit-text").value = song ? song.text : "";
 		editOriginal = { title: $("edit-title").value, text: $("edit-text").value };
-		$("btn-edit-delete").classList.toggle("hidden", !song);
+		$("btn-edit-delete").hidden = !song;
 		show("edit");
 	}
 
@@ -262,7 +266,7 @@
 		}).then(function () {
 			var b = $("offline-badge");
 			b.textContent = "✓ Offline";
-			b.className = "badge ok";
+			b.className = "badge badge--ok";
 		}, function () {});
 		// Ask the browser not to evict our data (not supported on older iOS)
 		if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
@@ -271,10 +275,10 @@
 	// Installed Home Screen apps on iOS keep their own storage, separate from Safari tabs. Shown once.
 	var KEY_HINT = "pc.hintDismissed";
 	if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !navigator.standalone && !load(KEY_HINT, false)) {
-		$("hint").classList.remove("hidden");
+		$("hint").hidden = false;
 	}
 	$("hint").addEventListener("click", function () {
-		$("hint").classList.add("hidden");
+		$("hint").hidden = true;
 		save(KEY_HINT, true);
 	});
 
@@ -294,15 +298,15 @@
 	function renderLyrics(song) {
 		lyrics.innerHTML = "";
 		var title = document.createElement("div");
-		title.className = "line song-title";
+		title.className = "lyrics__title";
 		title.textContent = song.title;
 		lyrics.appendChild(title);
 		song.text.split("\n").forEach(function (line) {
 			var d = document.createElement("div");
 			if (/^\s*$/.test(line)) {
-				d.className = "gap";
+				d.className = "lyrics__gap";
 			} else {
-				d.className = "line" + (SECTION_RE.test(line) ? " section" : "");
+				d.className = "lyrics__line" + (SECTION_RE.test(line) ? " lyrics__line--cue" : "");
 				d.textContent = line.replace(/^\s*>\s*/, "").replace(/^\[(.*)\]$/, "$1");
 			}
 			lyrics.appendChild(d);
@@ -364,8 +368,7 @@
 		playing = true;
 		pos = scroller.scrollTop;
 		lastT = performance.now ? performance.now() : Date.now();
-		$("btn-play").classList.add("playing");
-		$("prompter-view").classList.add("playing");
+		$("prompter-view").classList.add("prompter--playing");
 		$("btn-play").setAttribute("aria-label", "Pause");
 		rafId = window.requestAnimationFrame(tick);
 	}
@@ -373,8 +376,7 @@
 	function stop() {
 		playing = false;
 		window.cancelAnimationFrame(rafId);
-		$("btn-play").classList.remove("playing");
-		$("prompter-view").classList.remove("playing");
+		$("prompter-view").classList.remove("prompter--playing");
 		$("btn-play").setAttribute("aria-label", "Play");
 	}
 

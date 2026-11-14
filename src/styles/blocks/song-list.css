@@ -1,0 +1,82 @@
+/* The setlist. While reordering, each song has a grip instead of the edit button */
+.song-list {
+	flex: 1;
+	min-height: 0;
+	margin: 0;
+	padding: 0;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+	list-style: none;
+}
+
+.song-list__item {
+	display: flex;
+	align-items: center;
+	border-bottom: 1px solid var(--color-divider);
+}
+
+.song-list__item--empty {
+	padding: 30px 20px;
+	font-size: 20px;
+	line-height: 1.4;
+	color: var(--color-text-muted);
+}
+
+.song-list__item--dragging {
+	position: relative;
+	z-index: 2;
+	background: var(--color-control);
+	box-shadow: var(--shadow-raised);
+}
+
+/* A button that opens the song, styled as a plain row */
+.song-list__title {
+	flex: 1;
+	min-width: 0;
+	margin: 0;
+	padding: 24px 20px;
+	overflow: hidden;
+	font: inherit;
+	font-size: 44px;
+	color: inherit;
+	text-align: left;
+	white-space: nowrap;
+	text-overflow: clip;
+	background: none;
+	border: 0;
+	border-radius: 0;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.song-list__title:active {
+	background: var(--color-pressed);
+}
+
+.song-list__num {
+	margin-right: 14px;
+	color: var(--color-text-muted);
+	font-variant-numeric: tabular-nums;
+}
+
+.song-list__edit {
+	margin: 0 12px 0 0;
+}
+
+.song-list__grip {
+	display: flex;
+	align-self: stretch;
+	align-items: center;
+	justify-content: center;
+	width: 96px;
+}
+
+/* Three lines: the borders and a gradient stripe in the middle */
+.song-list__grip::before {
+	content: "";
+	width: 34px;
+	height: 20px;
+	background: linear-gradient(var(--color-text-muted), var(--color-text-muted)) center / 100% 4px no-repeat;
+	border-top: 4px solid var(--color-text-muted);
+	border-bottom: 4px solid var(--color-text-muted);
+}

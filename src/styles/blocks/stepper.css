@@ -1,0 +1,46 @@
+/* A value with − and + buttons under it: the speed and the text size */
+.stepper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.stepper__readout {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+	line-height: 1;
+	color: var(--color-text-secondary);
+	white-space: nowrap;
+}
+
+.stepper__meter {
+	width: 40px;
+	height: 32px;
+	margin-right: 8px;
+}
+
+.stepper__value {
+	font-size: 28px;
+	line-height: 1;
+	color: var(--color-text);
+}
+
+.stepper__pair {
+	display: flex;
+}
+
+/* The two buttons join into one, split by a line */
+.stepper__btn {
+	border-radius: 0;
+}
+
+.stepper__btn:first-child {
+	border-right: 1px solid var(--color-control-divider);
+	border-radius: var(--radius) 0 0 var(--radius);
+}
+
+.stepper__btn:last-child {
+	border-left-width: 0;
+	border-radius: 0 var(--radius) var(--radius) 0;
+}

@@ -1,0 +1,17 @@
+/* Layout: the screens. One at a time fills the page, and its blocks stack in a column */
+.view {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: flex;
+	flex-direction: column;
+	background: var(--color-background);
+}
+
+/* Double-tapping the lyrics or the list must not select text */
+.view--unselectable {
+	-webkit-user-select: none;
+	user-select: none;
+}

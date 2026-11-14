@@ -17,67 +17,67 @@
 </head>
 <body>
 
-<section id="list-view" class="view">
+<section id="list-view" class="view view--unselectable">
 	<header class="bar">
-		<h1>Songs</h1>
+		<h1 class="bar__title">Songs</h1>
 		<span id="offline-badge" class="badge"></span>
-		<div class="spacer"></div>
-		<button id="btn-reorder" class="btn hidden">Reorder</button>
-		<button id="btn-export" class="btn hidden">Export</button>
-		<button id="btn-new" class="btn primary"><svg class="icon sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>New</button>
+		<div class="bar__spacer"></div>
+		<button id="btn-reorder" class="btn" hidden>Reorder</button>
+		<button id="btn-export" class="btn" hidden>Export</button>
+		<button id="btn-new" class="btn btn--primary"><svg class="icon icon--sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>New</button>
 	</header>
-	<div id="hint" class="hidden">Tip: Share, then Add to Home Screen. The installed app keeps its own songs, so add your lyrics there. <b>Tap to dismiss</b></div>
-	<div id="status"></div>
-	<ul id="song-list"></ul>
+	<div id="hint" class="notice notice--info" hidden>Tip: Share, then Add to Home Screen. The installed app keeps its own songs, so add your lyrics there. <b>Tap to dismiss</b></div>
+	<div id="status" class="notice notice--warning"></div>
+	<ul id="song-list" class="song-list"></ul>
 </section>
 
-<section id="edit-view" class="view hidden">
+<section id="edit-view" class="view" hidden>
 	<header class="bar">
 		<button id="btn-edit-cancel" class="btn">Cancel</button>
-		<div class="spacer"></div>
-		<button id="btn-edit-delete" class="btn danger" aria-label="Delete song"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
-		<button id="btn-edit-save" class="btn primary">Save</button>
+		<div class="bar__spacer"></div>
+		<button id="btn-edit-delete" class="btn btn--danger btn--icon bar__center" aria-label="Delete song"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
+		<button id="btn-edit-save" class="btn btn--primary">Save</button>
 	</header>
-	<input id="edit-title" type="text" placeholder="Title" autocapitalize="words">
-	<textarea id="edit-text" placeholder="Lyrics. Lines starting with &gt;, like &gt; Em – D – Am, are highlighted." autocorrect="off" spellcheck="false"></textarea>
+	<input id="edit-title" class="field field--title" type="text" placeholder="Title" autocapitalize="words">
+	<textarea id="edit-text" class="field field--area" placeholder="Lyrics. Lines starting with &gt;, like &gt; Em – D – Am, are highlighted." autocorrect="off" spellcheck="false"></textarea>
 </section>
 
-<section id="export-view" class="view hidden">
+<section id="export-view" class="view" hidden>
 	<header class="bar">
 		<button id="btn-export-done" class="btn">Done</button>
-		<h1>Export</h1>
-		<div class="spacer"></div>
-		<button id="btn-export-copy" class="btn primary">Copy</button>
+		<h1 class="bar__title">Export</h1>
+		<div class="bar__spacer"></div>
+		<button id="btn-export-copy" class="btn btn--primary">Copy</button>
 	</header>
-	<textarea id="export-text" readonly aria-label="All songs as text"></textarea>
+	<textarea id="export-text" class="field field--area" readonly aria-label="All songs as text"></textarea>
 </section>
 
-<section id="prompter-view" class="view hidden">
-	<div id="scroller"><div id="lyrics"></div></div>
-	<button id="btn-edit-song" class="btn" aria-label="Edit lyrics"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>
-	<div id="controls">
-		<div class="row main">
-			<button id="btn-back" class="btn" aria-label="Songs"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h2v2H4zM8 6h12v2H8zM4 11h2v2H4zM8 11h12v2H8zM4 16h2v2H4zM8 16h12v2H8z"/></svg></button>
+<section id="prompter-view" class="view view--unselectable prompter" hidden>
+	<div id="scroller" class="prompter__scroller"><div id="lyrics" class="lyrics"></div></div>
+	<button id="btn-edit-song" class="btn btn--icon prompter__edit" aria-label="Edit lyrics"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></button>
+	<div id="controls" class="controls">
+		<div class="controls__row">
+			<button id="btn-back" class="btn btn--icon" aria-label="Songs"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h2v2H4zM8 6h12v2H8zM4 11h2v2H4zM8 11h12v2H8zM4 16h2v2H4zM8 16h12v2H8z"/></svg></button>
 			<div class="stepper">
-				<div class="readout" role="img" aria-label="Speed"><svg class="meter" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.8 19a9.2 9.2 0 1 1 18.4 0" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M12 18l5-8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><circle cx="12" cy="18" r="2.4" fill="currentColor"/></svg> <b id="speed-val" class="value"></b></div>
-				<div class="pair">
-					<button id="btn-slower" class="btn" aria-label="Slower"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11h14v2H5z"/></svg></button>
-					<button id="btn-faster" class="btn" aria-label="Faster"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg></button>
+				<div class="stepper__readout" role="img" aria-label="Speed"><svg class="stepper__meter" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.8 19a9.2 9.2 0 1 1 18.4 0" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M12 18l5-8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><circle cx="12" cy="18" r="2.4" fill="currentColor"/></svg> <b id="speed-val" class="stepper__value"></b></div>
+				<div class="stepper__pair">
+					<button id="btn-slower" class="btn btn--icon stepper__btn" aria-label="Slower"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11h14v2H5z"/></svg></button>
+					<button id="btn-faster" class="btn btn--icon stepper__btn" aria-label="Faster"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg></button>
 				</div>
 			</div>
-			<div class="transport">
-				<button id="btn-prev" class="btn" aria-label="Previous song"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 3.5L7 12l8.5 8.5 2.1-2.1L11.2 12l6.4-6.4z"/></svg></button>
-				<button id="btn-play" class="btn primary wide" aria-label="Play"><svg class="icon i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="icon i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button>
-				<button id="btn-next" class="btn" aria-label="Next song"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 3.5L17 12l-8.5 8.5-2.1-2.1L12.8 12 6.4 5.6z"/></svg></button>
+			<div class="controls__transport">
+				<button id="btn-prev" class="btn btn--icon btn--bare controls__skip" aria-label="Previous song"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 3.5L7 12l8.5 8.5 2.1-2.1L11.2 12l6.4-6.4z"/></svg></button>
+				<button id="btn-play" class="btn btn--primary btn--icon btn--round controls__play" aria-label="Play"><svg class="icon icon--lg icon--play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><svg class="icon icon--lg icon--pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button>
+				<button id="btn-next" class="btn btn--icon btn--bare controls__skip" aria-label="Next song"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 3.5L17 12l-8.5 8.5-2.1-2.1L12.8 12 6.4 5.6z"/></svg></button>
 			</div>
 			<div class="stepper">
-				<div class="readout" role="img" aria-label="Text size"><svg class="meter" viewBox="0 0 30 24" aria-hidden="true"><text x="0" y="20" font-size="22" font-weight="700" font-family="-apple-system, Helvetica, Arial, sans-serif" fill="currentColor">A</text><text x="17" y="20" font-size="14" font-weight="700" font-family="-apple-system, Helvetica, Arial, sans-serif" fill="currentColor">A</text></svg> <b id="size-val" class="value"></b></div>
-				<div class="pair">
-					<button id="btn-smaller" class="btn" aria-label="Smaller text"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11h14v2H5z"/></svg></button>
-					<button id="btn-bigger" class="btn" aria-label="Bigger text"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg></button>
+				<div class="stepper__readout" role="img" aria-label="Text size"><svg class="stepper__meter" viewBox="0 0 30 24" aria-hidden="true"><text x="0" y="20" font-size="22" font-weight="700" font-family="-apple-system, Helvetica, Arial, sans-serif" fill="currentColor">A</text><text x="17" y="20" font-size="14" font-weight="700" font-family="-apple-system, Helvetica, Arial, sans-serif" fill="currentColor">A</text></svg> <b id="size-val" class="stepper__value"></b></div>
+				<div class="stepper__pair">
+					<button id="btn-smaller" class="btn btn--icon stepper__btn" aria-label="Smaller text"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11h14v2H5z"/></svg></button>
+					<button id="btn-bigger" class="btn btn--icon stepper__btn" aria-label="Bigger text"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg></button>
 				</div>
 			</div>
-			<button id="btn-top" class="btn" aria-label="Back to top"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v2H5zM12 8l-7 7h5v5h4v-5h5z"/></svg></button>
+			<button id="btn-top" class="btn btn--icon" aria-label="Back to top"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v2H5zM12 8l-7 7h5v5h4v-5h5z"/></svg></button>
 		</div>
 	</div>
 </section>
