@@ -1,18 +1,18 @@
-/* The top bar of the list, editor and export screens */
+/* The top bar of the list, editor and export screens. Edge to edge, so the sides keep clear of a notch */
 .bar {
 	position: relative;
 	display: flex;
 	flex-shrink: 0;
 	align-items: center;
 	height: var(--bar-height);
-	padding: 0 var(--gutter);
+	padding: 0 calc(var(--gutter) + var(--edge) + env(safe-area-inset-right, 0px)) 0 calc(var(--gutter) + var(--edge) + env(safe-area-inset-left, 0px));
 	background: var(--color-surface);
 	border-bottom: 1px solid var(--color-border);
 }
 
 .bar__title {
-	margin: 0 12px;
-	font-size: 26px;
+	margin: 0 var(--gutter);
+	font-size: var(--font-size-title);
 	font-weight: 600;
 }
 
@@ -26,4 +26,11 @@
 	top: calc((var(--bar-height) - var(--button-size)) / 2);
 	left: 50%;
 	margin: 0 0 0 calc(var(--button-size) / -2);
+}
+
+/* The Offline badge is the first to go when the buttons need the room */
+@media (max-width: 459px) {
+	.bar__title {
+		margin-left: 4px;
+	}
 }

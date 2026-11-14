@@ -5,10 +5,18 @@
 	var KEY_SONGS = "pc.songs";
 	var KEY_SETTINGS = "pc.settings";
 	var KEY_PRELOADED = "pc.preloaded";
-	var DEFAULTS = { size: 56, speed: 30 };
-	// Speed is in pixels per second at the default size, and scales with the text size, so resizing keeps
+	var DEFAULTS = { speed: 30 };
+	// The text size of the lyrics is in vw: 1 is 1% of the screen width (of the column, on a desktop), so a
+	// line holds about 180 / size characters on any screen. 8 is 60 px on an iPad mini in portrait, and 5 is
+	// 57 px in landscape, where the screen is wider but not taller.
+	var SIZE_MIN = 3, SIZE_MAX = 16, SIZE_STEP = 0.5;
+	function defaultSize() { return window.innerWidth > window.innerHeight ? 5 : 8; }
+	// Before the size was in vw, it was saved in px, on an iPad mini in portrait, 744 px wide
+	var LEGACY_WIDTH = 744;
+	// Speed is in pixels per second at BASE_SIZE px, and scales with the text size, so resizing keeps
 	// the pace in lines. 5 is already ~15 s per line; 100 is ~0.8 s.
-	var SIZE_MIN = 24, SIZE_MAX = 120, SIZE_STEP = 4;
+	var BASE_SIZE = 56;
+	var MIN_PX = 18; // the smallest the lyrics are drawn, however narrow the screen
 	var SPEED_MIN = 5, SPEED_MAX = 100, SPEED_STEP = 5;
 
 	function $(id) { return document.getElementById(id); }
@@ -290,7 +298,8 @@
 	var pos = 0;
 	var lastT = 0;
 	var rafId = 0;
-	var cfg = { size: DEFAULTS.size, speed: DEFAULTS.speed };
+	var cfg = { size: defaultSize(), speed: DEFAULTS.speed };
+	var fontPx = BASE_SIZE; // the lyrics' font size as drawn, which follows the screen: see measureFont()
 	// Chords and cues are Markdown blockquotes ("> Em – D – Am"), the same as in lyrics/*.md. [Chorus], (Chorus)
 	// and bare section names are still highlighted for songs written before that.
 	var SECTION_RE = /^\s*(>.*|\[.*\]|\(.*\)|(intro|verse|pre-?chorus|chorus|bridge|solo|interlude|outro|refrain|hook)\b[^a-z]*\d*\s*:?)\s*$/i;
@@ -313,12 +322,25 @@
 		});
 	}
 
+	// The speed scales with the size in px, which changes with the screen width as well as with the buttons
+	function measureFont() {
+		fontPx = parseFloat(window.getComputedStyle(lyrics).fontSize) || BASE_SIZE;
+	}
+
+	// On a narrow phone, the smallest sizes would be too small to read: the floor is where the text is 18 px
 	function applyCfg() {
-		lyrics.style.fontSize = cfg.size + "px";
+		lyrics.style.setProperty("--lyrics-size", cfg.size);
+		measureFont();
+		var floor = Math.max(SIZE_MIN, Math.ceil(MIN_PX / (fontPx / cfg.size) / SIZE_STEP) * SIZE_STEP);
+		if (cfg.size < floor) {
+			cfg.size = floor;
+			lyrics.style.setProperty("--lyrics-size", cfg.size);
+			measureFont();
+		}
 		$("size-val").textContent = cfg.size;
 		$("speed-val").textContent = cfg.speed;
 		// Dim the buttons that can't go any further
-		$("btn-smaller").disabled = cfg.size <= SIZE_MIN;
+		$("btn-smaller").disabled = cfg.size <= floor;
 		$("btn-bigger").disabled = cfg.size >= SIZE_MAX;
 		$("btn-slower").disabled = cfg.speed <= SPEED_MIN;
 		$("btn-faster").disabled = cfg.speed >= SPEED_MAX;
@@ -328,7 +350,7 @@
 	function changeCfg(name, delta, min, max) {
 		cfg[name] = clamp(cfg[name] + delta, min, max);
 		applyCfg();
-		settings[songs[current].id] = { size: cfg.size, speed: cfg.speed };
+		settings[songs[current].id] = { vw: cfg.size, speed: cfg.speed };
 		save(KEY_SETTINGS, settings);
 	}
 
@@ -338,7 +360,9 @@
 		current = i;
 		var saved = settings[songs[i].id] || {};
 		// Clamp so values saved under older, wider limits stay valid
-		cfg.size = clamp(saved.size || DEFAULTS.size, SIZE_MIN, SIZE_MAX);
+		var size = saved.vw;
+		if (size == null && saved.size) size = Math.round(saved.size / LEGACY_WIDTH * 100 / SIZE_STEP) * SIZE_STEP;
+		cfg.size = clamp(size || defaultSize(), SIZE_MIN, SIZE_MAX);
 		cfg.speed = clamp(saved.speed != null ? saved.speed : DEFAULTS.speed, SPEED_MIN, SPEED_MAX);
 		renderLyrics(songs[i]);
 		show("prompter");
@@ -356,7 +380,7 @@
 		lastT = t;
 		// If scrollTop differs from our float position the user moved it; follow them
 		if (Math.abs(scroller.scrollTop - pos) > 2) pos = scroller.scrollTop;
-		pos += cfg.speed * (cfg.size / DEFAULTS.size) * dt / 1000;
+		pos += cfg.speed * (fontPx / BASE_SIZE) * dt / 1000;
 		scroller.scrollTop = pos;
 		var max = scroller.scrollHeight - scroller.clientHeight;
 		if (pos >= max) { pos = max; stop(); return; }
@@ -468,6 +492,9 @@
 			lastTapEnd = now;
 		}
 	}, { passive: false });
+
+	// Rotating the screen or resizing the window changes the size of the text, and so the pace
+	window.addEventListener("resize", applyCfg, false);
 
 	/* The page must never move: if iOS scrolls it anyway, put it straight back. Except in the editor, where
 	   the on-screen keyboard covers the bottom of the textarea and iOS scrolls the page to keep the caret

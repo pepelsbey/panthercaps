@@ -36,11 +36,97 @@
 	--color-info-background: #0b1a22;
 	--color-cue: #ffd60a;
 
-	/* Sizes */
+	/* Sizes, for the iPad mini, which the app is made for. The media queries below shrink them for phones
+	   and widen the page for desktops */
 	--font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	--gutter: 12px;
 	--radius: 12px;
 	--button-size: 64px;
+	--button-padding: 22px;
+	--button-gap: 4px;
+	--play-size: 108px;
 	--bar-height: 80px;
-	--controls-height: 128px;
+	--icon-size: 36px;
+	--icon-size-sm: 28px;
+	--icon-size-lg: 62px;
+	--font-size-button: 22px;
+	--font-size-title: 26px;
+	--font-size-list: 44px;
+	--font-size-field-title: 24px;
+	--font-size-field-text: 22px;
+	--list-padding-block: 24px;
+	--list-padding-inline: 20px;
+
+	/* The page is a column this wide on desktops; --edge is the space on each side of it */
+	--content-width: 960px;
+	--edge: 0px;
+	--lyrics-inline: 5%;
+	--lyrics-unit: 1vw; /* the lyrics' text size is a number of these, the same on every screen width */
+}
+
+/* Phones in portrait. Below 640px, the controls no longer fit in a row, see controls.css */
+@media (max-width: 639px) and (min-height: 501px) {
+	:root {
+		--gutter: 8px;
+		--radius: 10px;
+		--button-size: 48px;
+		--button-padding: 12px;
+		--button-gap: 2px;
+		--play-size: 76px;
+		--bar-height: 60px;
+		--icon-size: 28px;
+		--icon-size-sm: 22px;
+		--icon-size-lg: 46px;
+		--font-size-button: 18px;
+		--font-size-title: 22px;
+		--font-size-list: 26px;
+		--font-size-field-title: 20px;
+		--font-size-field-text: 18px;
+		--list-padding-block: 14px;
+		--list-padding-inline: 12px;
+	}
+}
+
+/* Narrow phones, 320px: the bar's three buttons need the room */
+@media (max-width: 359px) and (min-height: 501px) {
+	:root {
+		--button-padding: 9px;
+		--icon-size-sm: 20px;
+		--font-size-button: 16px;
+		--font-size-title: 20px;
+	}
+}
+
+/* Phones in landscape, and any other window that is short: the same, but with less height */
+@media (max-height: 500px) {
+	:root {
+		--gutter: 12px;
+		--radius: 10px;
+		--button-size: 44px;
+		--button-padding: 14px;
+		--button-gap: 3px;
+		--play-size: 64px;
+		--bar-height: 52px;
+		--icon-size: 26px;
+		--icon-size-sm: 20px;
+		--icon-size-lg: 38px;
+		--font-size-button: 18px;
+		--font-size-title: 22px;
+		--font-size-list: 26px;
+		--font-size-field-title: 20px;
+		--font-size-field-text: 18px;
+		--list-padding-block: 12px;
+		--list-padding-inline: 16px;
+	}
+}
+
+/* Desktops, wider than the iPad mini in landscape (1133px), so that one stays as it is */
+@media (min-width: 1200px) {
+	:root {
+		--edge: calc((100vw - var(--content-width)) / 2);
+		--lyrics-unit: calc(var(--content-width) / 100);
+		--lyrics-inline: 24px;
+		--font-size-list: 36px;
+		--list-padding-block: 20px;
+	}
 }

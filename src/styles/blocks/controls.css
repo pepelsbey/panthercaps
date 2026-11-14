@@ -1,12 +1,12 @@
 /* The playback controls along the bottom, in a single row:
-   Songs | Speed | Previous, Play, Next | Size | Top */
+   Songs | Speed | Previous, Play, Next | Size | Top
+   Edge to edge, so the sides and the bottom keep clear of a notch and the Home indicator */
 .controls {
 	display: flex;
 	flex-shrink: 0;
 	align-items: center;
 	justify-content: space-between;
-	height: var(--controls-height);
-	padding: 10px var(--gutter);
+	padding: 10px calc(var(--gutter) + var(--edge) + env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) calc(var(--gutter) + var(--edge) + env(safe-area-inset-left, 0px));
 	background: var(--color-surface);
 	border-top: 1px solid var(--color-border);
 }
@@ -25,9 +25,23 @@
 
 /* Previous and Next: only the chevrons, centred on Play */
 .controls__skip {
-	width: 52px;
+	width: calc(var(--button-size) * 0.8);
 }
 
 .controls__play {
-	margin: 0 4px;
+	margin: 0 var(--button-gap);
+}
+
+/* A phone in portrait is too narrow for one row: Play moves up to a row of its own */
+@media (max-width: 639px) and (min-height: 501px) {
+	.controls__row {
+		flex-wrap: wrap;
+	}
+
+	.controls__transport {
+		order: -1;
+		justify-content: center;
+		width: 100%;
+		margin-bottom: 10px;
+	}
 }

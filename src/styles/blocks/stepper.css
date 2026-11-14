@@ -44,3 +44,20 @@
 	border-left-width: 0;
 	border-radius: 0 var(--radius) var(--radius) 0;
 }
+
+/* Smaller readout on phones */
+@media (max-width: 639px), (max-height: 500px) {
+	.stepper__readout {
+		margin-bottom: 6px;
+	}
+
+	.stepper__meter {
+		width: 30px;
+		height: 24px;
+		margin-right: 6px;
+	}
+
+	.stepper__value {
+		font-size: 22px;
+	}
+}

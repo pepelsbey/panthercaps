@@ -1,8 +1,9 @@
-/* The text fields of the editor and export screens */
+/* The text fields of the editor and export screens. Edge to edge, with the text kept in the column */
 .field {
 	display: block;
 	width: 100%;
 	margin: 0;
+	font-family: inherit;
 	color: var(--color-text);
 	border: 0;
 	border-radius: 0;
@@ -14,9 +15,9 @@
 
 .field--title {
 	flex-shrink: 0;
-	height: 56px;
-	padding: 0 16px;
-	font-size: 24px;
+	height: calc(var(--button-size) - 8px);
+	padding: 0 calc(var(--gutter) + 4px + var(--edge) + env(safe-area-inset-right, 0px)) 0 calc(var(--gutter) + 4px + var(--edge) + env(safe-area-inset-left, 0px));
+	font-size: var(--font-size-field-title);
 	background: var(--color-field);
 	border-bottom: 1px solid var(--color-border);
 }
@@ -25,8 +26,8 @@
 .field--area {
 	flex: 1;
 	min-height: 0;
-	padding: 16px;
-	font-size: 22px;
+	padding: calc(var(--gutter) + 4px) calc(var(--gutter) + 4px + var(--edge) + env(safe-area-inset-right, 0px)) calc(var(--gutter) + 4px + env(safe-area-inset-bottom, 0px)) calc(var(--gutter) + 4px + var(--edge) + env(safe-area-inset-left, 0px));
+	font-size: var(--font-size-field-text);
 	line-height: 1.4;
 	background: var(--color-background);
 	resize: none;

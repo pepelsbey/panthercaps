@@ -11,7 +11,7 @@
 	--btn-background: var(--color-control-translucent);
 	position: absolute;
 	top: var(--gutter);
-	right: var(--gutter);
+	right: calc(var(--gutter) + env(safe-area-inset-right, 0px));
 	z-index: 3;
 	transition: opacity 0.2s;
 }

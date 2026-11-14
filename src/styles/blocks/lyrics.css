@@ -1,7 +1,7 @@
-/* The lyrics on the playback screen. app.js sets the font size, and the lines follow it in em */
+/* The lyrics on the playback screen. app.js sets --lyrics-size, in vw, and the lines follow it in em */
 .lyrics {
-	padding: 12px 5% 60vh;
-	font-size: 56px;
+	padding: 12px calc(var(--lyrics-inline) + var(--edge) + env(safe-area-inset-right, 0px)) 60vh calc(var(--lyrics-inline) + var(--edge) + env(safe-area-inset-left, 0px));
+	font-size: calc(var(--lyrics-size, 8) * var(--lyrics-unit));
 	font-weight: 600;
 	line-height: 1.35;
 	word-wrap: break-word;
@@ -33,4 +33,12 @@
 
 .lyrics__gap {
 	height: 0.8em;
+}
+
+/* On a phone, a smaller title, still on one line: the beginning is enough to know the song */
+@media (max-width: 639px), (max-height: 500px) {
+	.lyrics__title {
+		margin-bottom: 12px;
+		font-size: 28px;
+	}
 }

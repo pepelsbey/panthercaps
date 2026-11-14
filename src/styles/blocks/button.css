@@ -6,10 +6,12 @@
 	--btn-border: var(--color-control-border);
 	min-width: var(--button-size);
 	height: var(--button-size);
-	margin: 0 4px;
-	padding: 0 22px;
-	font-size: 22px;
+	margin: 0 var(--button-gap);
+	padding: 0 var(--button-padding);
+	font-size: var(--font-size-button);
 	color: var(--color-text);
+	white-space: nowrap;
+	cursor: pointer;
 	background: var(--btn-background);
 	border: 1px solid var(--btn-border);
 	border-radius: var(--radius);
@@ -23,6 +25,7 @@
 
 .btn:disabled {
 	--btn-background-active: var(--btn-background);
+	cursor: default;
 	opacity: 0.25;
 }
 
@@ -61,7 +64,18 @@
 
 /* The big round Play */
 .btn--round {
-	width: 108px;
-	height: 108px;
+	width: var(--play-size);
+	height: var(--play-size);
 	border-radius: 50%;
+}
+
+/* A mouse can hover, a finger can't: the hover is the same color as the press */
+@media (hover: hover) {
+	.btn:hover {
+		background: var(--btn-background-active);
+	}
+
+	.btn--bare:hover {
+		opacity: 0.7;
+	}
 }

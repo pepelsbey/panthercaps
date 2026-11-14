@@ -16,3 +16,10 @@
 	color: var(--color-success);
 	background: var(--color-success-background);
 }
+
+/* No room next to the three buttons on a narrow phone */
+@media (max-width: 459px) {
+	.badge {
+		display: none;
+	}
+}

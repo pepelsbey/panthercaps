@@ -17,3 +17,8 @@ body {
 	color: var(--color-text);
 	background: var(--color-background);
 }
+
+/* Dark scrollbars on desktops */
+html {
+	color-scheme: dark;
+}

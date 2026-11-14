@@ -1,6 +1,6 @@
 /* A message under the top bar of the list: the Home Screen tip and the save errors */
 .notice {
-	padding: 10px 20px;
+	padding: 10px calc(20px + var(--edge) + env(safe-area-inset-right, 0px)) 10px calc(20px + var(--edge) + env(safe-area-inset-left, 0px));
 	font-size: 16px;
 }
 

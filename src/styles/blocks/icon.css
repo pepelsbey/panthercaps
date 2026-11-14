@@ -1,24 +1,24 @@
 /* Inline SVG icons on a 24×24 grid, in the text color */
 .icon {
 	display: block;
-	width: 36px;
-	height: 36px;
+	width: var(--icon-size);
+	height: var(--icon-size);
 	margin: 0 auto;
 	fill: currentColor;
 }
 
-/* Next to a word, like in + New */
+/* Next to a word, like in + New. Sized by the em of the button, so it follows the font size */
 .icon--sm {
 	display: inline-block;
-	width: 28px;
-	height: 28px;
-	margin: 0 8px 0 0;
-	vertical-align: -6px;
+	width: var(--icon-size-sm);
+	height: var(--icon-size-sm);
+	margin: 0 0.35em 0 0;
+	vertical-align: -0.27em;
 }
 
 .icon--lg {
-	width: 62px;
-	height: 62px;
+	width: var(--icon-size-lg);
+	height: var(--icon-size-lg);
 }
 
 /* Play and Pause share a button, and .prompter--playing swaps them */
