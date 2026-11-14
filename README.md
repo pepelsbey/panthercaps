@@ -68,6 +68,6 @@ The styles are in `src/styles/`: the tokens, base and layout, then one file per 
 
 Offline mode works only on localhost or HTTPS, so the dev server opened on the iPad by its network address runs without it. Where it does work, the app shows the cached version first, so reload twice to see a change.
 
-To replace the icon, put a square PNG without transparency in `src/icons/512.png`, run `node tools/make-icons.js` and commit the results. It needs ImageMagick and zopflipng: `brew install imagemagick zopfli`.
+The icon comes from `src/icons/logo.svg`: a square without transparency, since iOS rounds the corners itself. After changing it, run `node tools/make-icons.js` to render the PNG sizes, and commit them. It needs librsvg and zopflipng: `brew install librsvg zopfli`.
 
 To debug on the iPad itself, `tools/inspector.js` takes screenshots, runs code and reads the console through `ios_webkit_debug_proxy` (`brew install ios-webkit-debug-proxy`). The usage is at the top of the file.
